@@ -41,7 +41,7 @@
                 return "";
            },
            prettyUserName(){
-               return (this.post.pod==this.$store.state.webID)?"You":this.post.pod.replace("https://","");
+               return (this.post.pod==this.$store.state.webID)?"You":this.post.pod.replace("https://","").replace("/","");
            }
         },
         created(){
