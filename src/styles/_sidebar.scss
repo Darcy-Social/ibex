@@ -1,0 +1,150 @@
+.sidebar{
+    width:40%;
+    background-color: $darkBlue;
+    color:$white;
+    height: 100%;
+    position: fixed;
+    top:0; left:0;
+    //overflow: scroll;
+    z-index: 1000;
+
+    a{
+        color: $white;
+        text-decoration: none;
+        &:hover{
+            text-decoration: underline;
+        }
+    }
+
+    .logo{
+        text-align:center;
+        margin-top: 20px;
+        img{
+            max-width: 80%;
+        }
+    }
+
+    .addButton{
+        text-align: center;
+    }
+
+    .feedList{
+        padding:0;
+        margin: 0;
+        list-style: none;
+        margin-top: 20px;
+        padding-right: 1rem;
+        li{ 
+            cursor: pointer;
+            padding:1rem;
+            &.active,&:hover{
+                background-color: $midBlue;
+            }
+        }
+    }
+}
+
+.topBar{
+    padding:0;
+    height: 0;
+    .menuBtn{
+        margin:5px 3px;
+        img{
+            width: 30px;
+            //height: 50px;
+        }
+    }
+}
+
+//XS
+@media (max-width: 575.98px) {
+    .sidebar{
+        width:80vw !important;
+        position: fixed;
+        transition: margin .2s ease-out;
+
+        margin-left: -80vw; //hide the bar on mobile
+
+        &.open{
+            margin-left: 0;
+        }
+    }
+
+    .topBar{
+        padding-top: 10px;
+        z-index: 10;
+        height: 40px;
+        background-color: $darkBlue;
+        color: $white;
+        position: fixed;
+        top:0; left:0;
+        width:100%;
+        text-align: right;
+       
+    }
+
+    
+}
+
+// SM
+@media (min-width: 576px) and (max-width: 767.98px) { 
+    .sidebar{
+        width:80vw !important;
+        position: fixed;
+        transition: margin .2s ease-out;
+
+        
+
+        margin-left: -80vw; //hide the bar on mobile
+
+        &.open{
+            margin-left: 0;
+        }
+    }
+
+    .topBar{
+        height: 40px;
+        padding-top: 10px;
+        background-color: $darkBlue;
+        color: $white;
+        position: fixed;
+        top:0; left:0;
+        width:100%;
+        text-align: right;
+        a{
+            color:$white;
+            background-color: transparent;
+            border: none;
+        }
+    }
+}
+
+//MD
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .sidebar{
+        width:50vw !important;
+        position: fixed;
+       
+        transition: margin .2s ease-out;
+
+        margin-left: -80vw; //hide the bar on mobile
+
+        &.open{
+            margin-left: 0;
+        }
+    }
+
+    .topBar{
+        padding-top: 10px;
+        height: 40px;
+        background-color: $darkBlue;
+        color: $white;
+        position: fixed;
+        top:0; left:0;
+        width:100%;
+        text-align: right;
+        button{
+            color:$white;
+        }
+    }
+}

@@ -1,0 +1,15 @@
+body{
+    font-family: $font-family;
+    background-color: $lightGrey;
+    margin: 0;
+}
+
+textarea,input{
+    font-family: $font-family;
+    font-size: 1rem;
+    width:100%;
+    border: #DDDDDD solid 1px;
+    background-color: $white;
+    border-radius: $radius;
+    padding:.5rem;
+}

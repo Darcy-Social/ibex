@@ -1,0 +1,34 @@
+.post,.comment{
+    background-color: $white;
+    border: $borderColor 1px solid;
+    border-radius: $radius;
+    margin: 1rem 0 1rem 0;
+    width: 100%;
+
+    header{
+        border-bottom: $borderColor 1px solid;
+        padding:.5rem;
+        .user{
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .time{
+            font-size: .9rem;
+            color: darken($borderColor,25%);
+        }
+    }
+
+    .content{
+        padding: .5rem;
+
+        img{
+            width: 100%;
+            max-width: max-content;
+        }
+    }
+
+    footer{
+        border-top: $borderColor 1px solid;
+        padding: .5rem;
+    }
+}
