@@ -82,11 +82,11 @@
             },
             prettyUserName(){
 
-                let feed = this.$store.state.feeds.find(element => element.url == this.post.pod+"/");
+                let feed = this.$store.state.feeds.find(element => element.url == this.post.pod);
                 if(feed){
                     return feed.name;
                 }else{
-                    if(this.post.pod == this.$store.state.webID)
+                    if(this.post.pod == this.$store.state.webID+"/")
                         return "You"
                     else
                         return "[Unknown User]";
