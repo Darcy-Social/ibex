@@ -6,6 +6,16 @@
     h1{
         font-size: 1rem;
     }
+
+    .markdownHelp{
+        color: darken($lightGrey, 40%);
+        border-bottom-left-radius: $radius;
+        border-bottom-right-radius: $radius;
+
+        a{
+            color: darken($lightGrey, 40%);
+        }
+    }
 }
 
 //XS

@@ -12,6 +12,11 @@
             <h1>Logged in as <em>{{$store.state.webID.replace("https://","")}}</em></h1>
 
             <textarea v-model="newPostContent" rows="2" placeholder="Write something..."></textarea>
+            <div class="markdownHelp">
+                <img style="width:27px;" src="https://upload.wikimedia.org/wikipedia/commons/4/48/Markdown-mark.svg" />  &nbsp;&nbsp;&nbsp; <b>**bold**</b> &nbsp;&nbsp;&nbsp; <i>_italic_</i> &nbsp;&nbsp;&nbsp; <span style="text-decoration: line-through;">~~strikethrough~~</span> &nbsp;&nbsp;&nbsp; <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="_blank">See more</a>
+            </div>
+
+
             <br/><br/>
             <button class="btn btn-primary" :disabled="!newPostContent.length" @click="doPublishPost">Publish now</button> 
             <br><br>
@@ -182,7 +187,7 @@ export default{
             if(this.newPostContent.length){
                 darcy.publishPost(this.$store.state.webID+"/",this.newPostContent)
                 .then((res)=>{
-                    this.doGetPosts(this.$store.state.webID);
+                    this.doGetPosts(this.$store.state.webID+"/");
                     this.newPostContent = "";
                     notie.alert({ text: 'Posts published',type:"success"});
                 })

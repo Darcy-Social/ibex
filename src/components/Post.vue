@@ -29,29 +29,28 @@
             }
         },
         computed:{
-           prettyDate(){
+            prettyDate(){
                return moment(this.post.date).format("MMMM Do YYYY, HH:mm:ss");
-           },
-           prettyPreviousDate(){
+            },
+            prettyPreviousDate(){
                let currentDate = moment(this.post.date).format("d/MM/YYYY"); //Date from current post
                let prevDate    = (this.previousDate!=0)?moment(this.previousDate).format("d/MM/YYYY"):0; //Date form previous post or 0
                if( currentDate != prevDate )
                 return moment(this.post.date).format("MMMM Do YYYY");
                else
                 return "";
-           },
-           prettyUserName(){
+            },
+            prettyUserName(){
                
-            let feed = this.$store.state.feeds.find(element => element.url == this.post.pod);
-            if(feed){
-                return feed.name;
-            }else{
-                if(this.post.pod == this.$store.state.webID+"/")
-                    return "You"
-                else
-                    return "[Unknown User]";
-            }
-
+                let feed = this.$store.state.feeds.find(element => element.url == this.post.pod);
+                if(feed){
+                    return feed.name;
+                }else{
+                    if(this.post.pod == this.$store.state.webID+"/" || this.post.pod == this.$store.state.webID)
+                        return "You"
+                    else
+                        return "[Unknown User]";
+                }
                
            }
         },

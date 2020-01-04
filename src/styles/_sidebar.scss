@@ -27,18 +27,21 @@
     .addButton{
         text-align: center;
     }
+    .feeds{
+        padding: 0;
 
-    .feedList{
-        padding:0;
-        margin: 0;
-        list-style: none;
-        margin-top: 20px;
-        padding-right: 1rem;
-        li{ 
-            cursor: pointer;
-            padding:1rem;
-            &.active,&:hover{
-                background-color: $midBlue;
+        .feedList{
+            padding:0;
+            margin: 0;
+            list-style: none;
+            margin-top: 20px;
+            padding-right: 0;
+            li{ 
+                cursor: pointer;
+                padding:1rem;
+                &.active,&:hover{
+                    background-color: $midBlue;
+                }
             }
         }
     }
@@ -67,6 +70,13 @@
 
         &.open{
             margin-left: 0;
+        }
+
+        .feeds{
+            padding-right: 1rem !important;
+            .feedList{
+                padding-right: 0 !important;
+            }
         }
     }
 
@@ -100,6 +110,10 @@
         &.open{
             margin-left: 0;
         }
+
+        .feedList{
+            padding:0;
+        }
     }
 
     .topBar{
@@ -131,6 +145,10 @@
 
         &.open{
             margin-left: 0;
+        }
+
+        .feedList{
+            padding:0;
         }
     }
 
