@@ -37,6 +37,9 @@
             margin-top: 20px;
             padding-right: 0;
             li{ 
+                &.friends{
+                    padding-left:2rem;
+                }
                 cursor: pointer;
                 padding:1rem;
                 &.active,&:hover{

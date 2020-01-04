@@ -4,7 +4,7 @@
         <a @click="$store.state.sidebarOpen=!$store.state.sidebarOpen" class="menuBtn"><img src="../assets/menu-icon.svg" /></a>
     </div>
     <div class="row">
-        <Sidebar @changeFeed="changeFeed" :feeds="$store.state.feeds" :currentFeed="currentFeed"></Sidebar>
+        <Sidebar @changeFeed="changeFeed" @logout="logout" :feeds="$store.state.feeds" :currentFeed="currentFeed"></Sidebar>
         <div class="col-xs-12 col-md-9 col-lg-9 feed">
 
             <div class="container-fluid">
@@ -250,15 +250,22 @@ export default{
                 console.log(err);
             });
             
+        },
+
+        logout(){
+            let vm = this;
+            solid.auth.logout()
+            .then(() =>{
+                 vm.$store.state.session = {};
+                vm.$store.state.loggedIn = false;
+                vm.$store.state.webID = "";
+                vm.$router.push("/")
+            });
         }
 
     },
     mounted(){
 
-        // if(this.$store.state.loggedIn){
-        //     this.getFriends();
-        // }else
-        //     this.$router.push("/");
         
     },
     created(){

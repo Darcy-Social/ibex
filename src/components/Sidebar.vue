@@ -17,7 +17,7 @@
             <ul class="feedList" ref="feedList">
                 <li @click="changeFeed('')" :class="{'active':currentFeed==''}">All friends</li>
                 
-                <li v-for="feed in sortedFeeds" v-bind:key="feed.url" @click="changeFeed(feed.url)" :class="{'active':currentFeed==feed.url}">{{feed.name}}</li>
+                <li v-for="feed in sortedFeeds" v-bind:key="feed.url" @click="changeFeed(feed.url)" :class="{'active':currentFeed==feed.url}" class="friends">{{feed.name}}</li>
                
                 <li @click="changeFeed($store.state.webID+'/')" :class="{'active':currentFeed==$store.state.webID+'/'}">Your Posts</li>
             </ul>
@@ -27,6 +27,13 @@
     <div class="row">
         <div class="col-xs-12 col-md-12" style="text-align:center;">
             <small>Manage your friends on<br/><a href="https://solid.community">solid.community</a></small>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-md-12" style="text-align:center;">
+            <br/><br/>
+            <button class="btn btn-white" @click="logout">Logout</button>
         </div>
     </div>
     
@@ -55,6 +62,9 @@
             changeFeed(feed){
                 this.$store.state.sidebarOpen = !this.$store.state.sidebarOpen;
                 this.$emit("changeFeed",feed); //Sends a change feed event to feed component
+            },
+            logout(){
+                this.$emit("logout");
             }
         }
     }

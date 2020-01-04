@@ -3,7 +3,7 @@
         <article class="col-xs-12 col-md-12 comment">
             <header class="row">
                 <div class="col-xs-12 col-md-12">
-                    <span class="user">{{prettyUserName}}</span><br/>
+                    <span class="user"><a :href="comment.pod" target="_blank">{{prettyUserName}}</a></span><br/>
                     <small class="time">{{prettyDate}}</small>
                 </div>
             </header>

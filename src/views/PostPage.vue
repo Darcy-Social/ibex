@@ -9,7 +9,7 @@
         <article class="post col-xs-12 col-md-12">
             <header class="row">
                 <div class="col-md-12">
-                    <span class="user">{{prettyUserName}}</span><br/>
+                    <span class="user"><a :href="post.pod" target="_blank">{{prettyUserName}}</a></span><br/>
                     <small class="time">{{post.date}}</small>
                 </div>
             </header>

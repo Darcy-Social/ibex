@@ -16,6 +16,10 @@
             font-size: .9rem;
             color: darken($borderColor,25%);
         }
+        a{
+            color: $black;
+            text-decoration: none;
+        }
     }
 
     .content{
