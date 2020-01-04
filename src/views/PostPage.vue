@@ -26,6 +26,7 @@
 
     <div class="row">
         <div class="col-xs-12 col-md-12 pl-0">
+            <br/>
             <button class="btn btn-primary" :disabled="!newCommentContent.length" @click="postComment">Submit comment</button>
         </div>
     </div>
@@ -35,8 +36,6 @@
             <h1>{{post.comments.length}} Comment{{(post.comments.length>1)?'s':''}}</h1>
         </div>
     </div>
-
-    <button @click="reloadComments">load comments</button>
 
     <comment v-for="comment in sortedComments" v-bind:key="comment.id" :comment="comment"></comment>
 
@@ -87,6 +86,7 @@
                 if(this.newCommentContent.length){
                     darcy.publishComment(this.$store.state.webID+"/",this.post.url,this.newCommentContent);
                     this.post.comments = [];
+                    this.newCommentContent = "";
                     let vm = this;
                     setTimeout(function(comments){
                         vm.reloadComments();
@@ -128,7 +128,7 @@
                                 vm.parsedComments.push(newComment);
                             })
                             .catch((err)=>{
-                                console.log("err");
+                                console.log(err);
                             });
 
                         } //End if comment !== null

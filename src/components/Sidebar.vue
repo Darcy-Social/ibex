@@ -17,7 +17,7 @@
             <ul class="feedList" ref="feedList">
                 <li @click="changeFeed('')" :class="{'active':currentFeed==''}">All friends</li>
                 <li v-for="feed in sortedFeeds" v-bind:key="feed" @click="changeFeed(feed+'/')" :class="{'active':currentFeed==feed+'/'}">{{feed.replace("https://","")}}</li>
-                <li @click="changeFeed($store.state.webID)" :class="{'active':currentFeed==$store.state.webID}">Your Posts</li>
+                <li @click="changeFeed($store.state.webID+'/')" :class="{'active':currentFeed==$store.state.webID+'/'}">Your Posts</li>
             </ul>
         </div>
     </div>

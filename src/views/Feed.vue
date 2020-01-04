@@ -4,7 +4,7 @@
         <a @click="$store.state.sidebarOpen=!$store.state.sidebarOpen" class="menuBtn"><img src="../assets/menu-icon.svg" /></a>
     </div>
     <div class="row">
-        <Sidebar @changeFeed="changeFeed" :feeds="feeds" :currentFeed="currentFeed"></Sidebar>
+        <Sidebar @changeFeed="changeFeed" :feeds="$store.state.feeds" :currentFeed="currentFeed"></Sidebar>
         <div class="col-xs-12 col-md-9 col-lg-9 feed">
 
             <div class="container-fluid">
@@ -47,10 +47,7 @@ let solid = { auth }
 
 const $rdf = require('rdflib');
 
-//require("../js/darcy.js")();
-
 import darcy from "../js/darcy.js";
-
 
 export default{
     name:"Feed",
@@ -89,10 +86,10 @@ export default{
         
     },
     watch:{
-        feeds(newValue,oldValue){
-            if(newValue!=[])
-                this.getAllPosts();
-        }
+        // feeds(newValue,oldValue){
+        //     if(newValue!=[])
+        //         this.getAllPosts();
+        // }
     },
     methods:{
        
@@ -171,7 +168,7 @@ export default{
         getAllPosts(){
            
             let vm = this;
-            this.feeds.forEach((feed)=>{
+            this.$store.state.feeds.forEach((feed)=>{
                 if(feed!='')
                     vm.doGetPosts(feed+"/");
             });
@@ -209,6 +206,8 @@ export default{
                     
                     if(!this.$store.state.feeds.find(element => element == this.$store.state.webID))
                         this.$store.state.feeds.push(this.$store.state.webID);
+
+                    vm.getAllPosts();
                 })
                 .catch((res)=>{
                     notie.alert({ text: 'Error while getting friends',type:"error"});
@@ -220,6 +219,10 @@ export default{
     },
     mounted(){
 
+        // if(this.$store.state.loggedIn){
+        //     this.getFriends();
+        // }else
+        //     this.$router.push("/");
         
     },
     created(){
@@ -228,7 +231,6 @@ export default{
 
         if(this.$store.state.loggedIn){
             this.getFriends();
-            this.getAllPosts();
         }else
             this.$router.push("/");
         
