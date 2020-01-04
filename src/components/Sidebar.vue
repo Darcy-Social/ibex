@@ -2,7 +2,7 @@
 <div class="sidebar col-md-3 col-sm-12" :class="{'open':$store.state.sidebarOpen}">
     <div class="row">
         <div class="col-md-12 col-xs-12 logo">
-            <img src="../assets/logo-white.svg" />
+            <img src="../assets/darcy_logo_with_ibex.svg" />
         </div>
     </div>
 
