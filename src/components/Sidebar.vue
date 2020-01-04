@@ -16,7 +16,9 @@
         <div class="col-xs-12 col-md-12" style="padding-right:0">
             <ul class="feedList" ref="feedList">
                 <li @click="changeFeed('')" :class="{'active':currentFeed==''}">All friends</li>
-                <li v-for="feed in sortedFeeds" v-bind:key="feed" @click="changeFeed(feed+'/')" :class="{'active':currentFeed==feed+'/'}">{{feed.replace("https://","")}}</li>
+                
+                <li v-for="feed in sortedFeeds" v-bind:key="feed.url" @click="changeFeed(feed.url)" :class="{'active':currentFeed==feed.url}">{{feed.name}}</li>
+               
                 <li @click="changeFeed($store.state.webID+'/')" :class="{'active':currentFeed==$store.state.webID+'/'}">Your Posts</li>
             </ul>
         </div>
@@ -43,9 +45,10 @@
         },
         computed:{
             sortedFeeds(){
-                var newFeeds = this.feeds.slice(); //Separate the array from the Vue object
-                newFeeds.pop(); //Remove the last item (your id)
-                return newFeeds.sort();
+                function compare(a,b){
+                    return a.name < b.name;
+                }
+                return this.feeds.sort(compare);
             }
         },
         methods:{

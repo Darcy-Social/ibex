@@ -276,7 +276,7 @@ getName: async function(webid){
   const fetcher = new $rdf.Fetcher(store);
   await fetcher.load(webid);
   const fullName = store.any($rdf.sym(webid), FOAF('name'));
-  return ( fullName && fullName.value || friend.value);
+  return ( fullName && fullName.value || webid);
   
 },
 

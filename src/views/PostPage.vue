@@ -9,7 +9,7 @@
         <article class="post col-xs-12 col-md-12">
             <header class="row">
                 <div class="col-md-12">
-                    <span class="user">{{(post.pod==$store.state.webID && post.pod)?'You':post.pod.replace("https://","")}}</span><br/>
+                    <span class="user">{{prettyUserName}}</span><br/>
                     <small class="time">{{post.date}}</small>
                 </div>
             </header>
@@ -79,6 +79,18 @@
                 }
 
                 return this.parsedComments.sort(compare);
+            },
+            prettyUserName(){
+
+                let feed = this.$store.state.feeds.find(element => element.url == this.post.pod+"/");
+                if(feed){
+                    return feed.name;
+                }else{
+                    if(this.post.pod == this.$store.state.webID)
+                        return "You"
+                    else
+                        return "[Unknown User]";
+                }
             }
         },
         methods:{

@@ -41,7 +41,18 @@
                 return "";
            },
            prettyUserName(){
-               return (this.post.pod==this.$store.state.webID)?"You":this.post.pod.replace("https://","").replace("/","");
+               
+            let feed = this.$store.state.feeds.find(element => element.url == this.post.pod);
+            if(feed){
+                return feed.name;
+            }else{
+                if(this.post.pod == this.$store.state.webID+"/")
+                    return "You"
+                else
+                    return "[Unknown User]";
+            }
+
+               
            }
         },
         created(){

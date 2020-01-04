@@ -45,8 +45,6 @@ let writer = new commonmark.HtmlRenderer();
 const auth = require('solid-auth-client');
 let solid = { auth }
 
-const $rdf = require('rdflib');
-
 import darcy from "../js/darcy.js";
 
 export default{
@@ -119,7 +117,6 @@ export default{
                             
                             content = writer.render(reader.parse(res.data));
 
-                            var comments = [];
 
                             darcy.getComments(url)  //Get post comments
                             .then((comms)=>{
@@ -161,17 +158,20 @@ export default{
                 
             });
         },
-        changeFeed(feed){ //recieve a change feed action from Sidebar component
-            this.currentFeed = feed;
+        changeFeed(feedURL){ //recieve a change feed action from Sidebar component
+            this.currentFeed = feedURL;
         },
 
         getAllPosts(){
            
             let vm = this;
+
             this.$store.state.feeds.forEach((feed)=>{
-                if(feed!='')
-                    vm.doGetPosts(feed+"/");
+                if(feed.url!='')
+                    vm.doGetPosts(feed.url);
             });
+
+            vm.doGetPosts(vm.$store.state.webID+"/");
             notie.alert({ text: 'Loading posts',type:"success"});
            
         },
@@ -187,6 +187,7 @@ export default{
                     notie.alert({ text: 'Posts published',type:"success"});
                 })
                 .catch((err)=>{
+                    console.log(err);
                     notie.alert({ text: 'Error while posting',type:"error"});
                 });
             }
@@ -194,26 +195,56 @@ export default{
         },
 
         getFriends(){ //Get friends and store them in the vuex store
+
+            console.log("getting friends");
+            
             let vm = this;
 
             if(this.$store.state.feeds.length<=1){ //Fetch only when feeds includes only the logged in user
-            
+
                 darcy.listFriends(vm.$store.state.webID+"/profile/card#me") //Important! include /profile/card#me
                 .then((res)=>{
+
+                   
                     res.forEach((friend)=>{
-                        vm.$store.state.feeds.push(new URL(friend.value).origin);
+                       
+                        let friendURL = new URL(friend.value).origin+"/";
+
+                        var newFeed = {
+                            name: friendURL,
+                            url: friendURL
+                        }
+
+                        vm.$store.state.feeds.push(newFeed);
+                        vm.getFriendName(friendURL);
+                       
                     });
-                    
-                    if(!this.$store.state.feeds.find(element => element == this.$store.state.webID))
-                        this.$store.state.feeds.push(this.$store.state.webID);
 
                     vm.getAllPosts();
+                    
                 })
-                .catch((res)=>{
+                .catch((err)=>{
+                    console.log(err);
                     notie.alert({ text: 'Error while getting friends',type:"error"});
                 });
 
             }
+        },
+
+        getFriendName(webID){
+            let vm = this;
+            darcy.getName(webID+"/profile/card#me")
+            .then((res)=>{
+                
+                let feed = vm.$store.state.feeds.find(elements => elements.url == webID);
+                if(feed){
+                    feed.name = res;
+                }
+            })
+            .catch((err)=>{
+                console.log(err);
+            });
+            
         }
 
     },
@@ -229,18 +260,18 @@ export default{
 
         let vm = this;
 
-        if(this.$store.state.loggedIn){
-            this.getFriends();
-        }else
-            this.$router.push("/");
-        
-        
         solid.auth.trackSession(session => {
             vm.$store.state.session = session;
             vm.$store.state.loggedIn = true;
             vm.$store.state.webID = new URL(vm.$store.state.session.webId).origin;
             
         });
+
+        if(this.$store.state.loggedIn){
+            console.log("logged in > getting friends");
+            vm.getFriends();
+        }else
+            this.$router.push("/");
     }
 }
 
