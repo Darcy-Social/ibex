@@ -34,5 +34,9 @@
     footer{
         border-top: $borderColor 1px solid;
         padding: .5rem;
+        a{
+            color:$black;
+            text-decoration: none;
+        }
     }
 }

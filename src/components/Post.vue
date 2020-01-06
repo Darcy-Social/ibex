@@ -2,16 +2,21 @@
 <div class="row" style="margin-left:0">
     <h3 class="mb-0" v-if="prettyPreviousDate">{{prettyPreviousDate}}</h3>
     <article class="post">
-        <header class="row">
-            <div class="col-xs-12 col-md-12">
-                <span class="user"><a :href="this.post.pod" target="_blank">{{prettyUserName}}</a></span><br/>
-                <small class="time">{{prettyDate}}</small>
+        <header class="col-xs-12 col-md-12">
+            <div class="row">
+                <div class="col-xs-10 col-md-10">
+                    <span class="user"><a :href="this.post.pod" target="_blank">{{prettyUserName}}</a></span><br/>
+                    <small class="time">{{prettyDate}}</small>
+                </div>
+                <div class="col-xs-2 col-md-2" style="text-align:right;" v-if="canDelete">
+                    <button class="btn btn-default" @click="deletePost">&times;</button>
+                </div>
             </div>
         </header>
         <div class="content" id="contentDiv" v-html="post.content">
         </div>
         <footer >
-            <router-link :to="'/post/'+post.id">{{(post.comments.length)?post.comments.length:"No"}} Comments</router-link>
+            <router-link :to="'/post/'+post.id">{{(post.comments.length)?"See":"No"}} Comments</router-link>
         </footer>
     </article>
 </div>
@@ -20,6 +25,8 @@
 <script>
 
     import moment from "moment";
+    import darcy from '../js/darcy.js';
+    import notie from "notie";
 
     export default{
         props:["post","previousDate"],
@@ -46,13 +53,32 @@
                 if(feed){
                     return feed.name;
                 }else{
-                    if(this.post.pod == this.$store.state.webID+"/" || this.post.pod == this.$store.state.webID)
-                        return "You"
+                    let webID = darcy.getPodFromPodPath(this.$store.state.webID);
+                    if(this.post.pod == webID || this.post.pod+"/" == webID)
+                        return "You";
                     else
-                        return "[Unknown User]";
+                        return this.post.pod;
                 }
                
+           },
+           canDelete(){
+               return ( darcy.getPodFromPodPath(this.post.pod) == darcy.getPodFromPodPath(this.$store.state.webID));
            }
+
+           
+        },
+        methods:{
+             deletePost(){
+                darcy.deletePost(this.post.url,darcy.getPodFromPodPath(this.$store.state.webID))
+                .then((res)=>{
+                    //console.log(res);
+                    notie.alert({ text: 'Post deleted',type:"info"});
+                    this.$parent.getAllPosts();
+                })
+                .catch((err)=>{
+                    console.log(err);
+                })
+            },
         },
         created(){
         }

@@ -162,10 +162,104 @@ publishComment: function(pod,originalContentURL,text){
   });
 },
 
+deleteComment: function(commentURL,postURL,pod){ //comment URL, post URL, pod requesting action
+
+  let loggedInPod = methods.getPodFromWebid(pod);
+  let commentPod  = methods.getPodFromPodPath(commentURL);
+
+  var actionURL = "";
+
+  let pingbackFolder = methods.getDarcyPingbackPath(postURL); //get the post folder
+ 
+  let splittedCommentURL = commentURL.split("/");
+  let pingbackFile = "DARCY_"+splittedCommentURL[2]+"_"+splittedCommentURL[6].replace(".comment","")+"_comment.txt"; //transform comment URL in correct pingback filename
 
 
+  if(loggedInPod == commentPod){
+    actionURL = commentURL; //Delete your own comment
+  }else{
+
+    actionURL = pingbackFolder+pingbackFile; //Delete the pingback from your pod
+  }
 
 
+  return new Promise((resolve,reject)=>{ //Send delete of comment pingback
+    methods.fetchP(actionURL,{ //only the pingback or comment then pingback
+      method:"DELETE",
+      headers:{'Content-Type': 'text/plain'},
+    })
+    .then((res)=>{
+
+      if(loggedInPod == commentPod){ //if the one making the request is the owner
+        
+        methods.fetchP(pingbackFolder+pingbackFile,{ //also delete the pingback
+          method:"DELETE",
+          headers:{'Content-Type': 'text/plain'},
+        })
+        .then((res)=>{
+          resolve(res);
+          //console.log(res);
+        })
+        .catch((err)=>{
+          resolve(err);
+          console.log(err);
+        });
+
+      }else{
+        resolve(res);
+      }
+
+    })
+    .catch((err)=>{
+      console.log(err);
+      resolve(err);
+    })
+  });
+ 
+},
+
+deletePost: function(postURL,pod){
+
+  let loggedInPod = methods.getPodFromWebid(pod); //get pod performing action
+  let postPod  = methods.getPodFromPodPath(postURL); //Post URL
+
+  let pingbackFolder = methods.getDarcyPingbackPath(postURL); //get the post folder
+
+  console.log(postURL);
+
+  if(postPod == loggedInPod){ //If owner of the post
+
+    console.log("deleting post");
+    return new Promise((resolve,reject)=>{
+      methods.fetchP(postURL,{ //delete the post
+        method:"DELETE",
+        headers:{'Content-Type': 'text/plain'},
+      })
+      .then((res)=>{
+
+        console.log("deliting pingbak folder");
+        methods.fetchP(pingbackFolder,{ //Delete the pingback folder
+          method:"DELETE",
+          headers:{'Content-Type': 'text/plain'},
+        })
+        .then((res)=>{
+          resolve(res);
+        })
+        .catch((err)=>{
+          resolve(res);
+          console.log(err);
+        })
+
+      })
+      .catch((err)=>{
+        console.log(err);
+      });
+    });
+
+  }
+
+
+},
 
 
 getDarcyCommentURL: function(pod,slug){
@@ -201,8 +295,6 @@ getDarcyContentURL: function(pod,slug,type){
 stabilizeURLFragment: function(fragment){
   return fragment.replace(/[^a-z0-9.-]/gi,'-');
 },
-
-
 
 getDarcyPingbackURL: function(originalContentURL,pod,slug,pingbackType){
 /**

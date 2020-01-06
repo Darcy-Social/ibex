@@ -101,17 +101,19 @@ export default{
             darcy.getPosts(pod+"/").then((posts)=>{
                
                 posts.forEach((post)=>{
+
+                        let url = post.toString().replace(/</g,"").replace(/>/g,"");
+                        var postID = darcy.stabilizeURLFragment(url.replace("https://",""));
+                        var content = "";
                     
-                    var postID = md5(post.toString());
-                    
-                        if(!vm.$store.state.posts.find(element => element.id == postID)){
+                        if(!vm.$store.state.posts.find(element => element.id == postID)){ //Don't allow
                         
                         const regex = /(\d{4})-(\d{2})-(\d{2})T(\d{2}).(\d{2}).(\d{2})/g;
                         const matches = regex.exec(post);
                         var date = new Date(matches[0].replace(/\./g,':')+"Z");
 
-                        let url = post.toString().replace(/</g,"").replace(/>/g,"");
-                        var content = "";
+                        
+                        
                         var comments = []; 
                         
                         axios({
@@ -142,7 +144,7 @@ export default{
 
                             }) 
                             .catch((err)=>{
-                                console.log("this sis the getComments() error");
+                                console.log("this is the getComments() error");
                                 console.log("===="+err.message);
                                // if(err.)
                             });
@@ -171,6 +173,8 @@ export default{
            
             let vm = this;
 
+            vm.$store.state.posts = [];
+
             this.$store.state.feeds.forEach((feed)=>{
                 if(feed.url!='')
                     vm.doGetPosts(feed.url);
@@ -185,9 +189,9 @@ export default{
         doPublishPost(){
 
             if(this.newPostContent.length){
-                darcy.publishPost(this.$store.state.webID+"/",this.newPostContent)
+                darcy.publishPost(darcy.getPodFromPodPath(this.$store.state.webID)+"/",this.newPostContent)
                 .then((res)=>{
-                    this.doGetPosts(this.$store.state.webID+"/");
+                    this.doGetPosts(darcy.getPodFromPodPath(this.$store.state.webID)+"/");
                     this.newPostContent = "";
                     notie.alert({ text: 'Posts published',type:"success"});
                 })
@@ -207,7 +211,7 @@ export default{
 
             if(this.$store.state.feeds.length<=1){ //Fetch only when feeds includes only the logged in user
 
-                darcy.listFriends(vm.$store.state.webID+"/profile/card#me") //Important! include /profile/card#me
+                darcy.listFriends(darcy.getPodFromPodPath(vm.$store.state.webID)+"/profile/card#me") //Important! include /profile/card#me
                 .then((res)=>{
 
                    
@@ -261,7 +265,7 @@ export default{
                 vm.$store.state.webID = "";
                 vm.$router.push("/")
             });
-        }
+        },
 
     },
     mounted(){
@@ -281,9 +285,12 @@ export default{
 
         if(this.$store.state.loggedIn){
             console.log("logged in > getting friends");
-            vm.getFriends();
+            //vm.getFriends();
         }else
             this.$router.push("/");
+
+        if(!this.$store.state.feeds.length)
+            this.getFriends();
     }
 }
 
