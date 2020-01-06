@@ -36,6 +36,13 @@
             <button class="btn btn-white" @click="logout">Logout</button>
         </div>
     </div>
+
+    <div class="row" style="margin-top:10rem;">
+        <div class="col-xs-12 col-md-12" style="text-align:center;">
+            <hr/>
+            <a href="https://darcy.is/ibex" target="_blank">What is this?</a>
+        </div>
+    </div>
     
 </div>
 </template>
