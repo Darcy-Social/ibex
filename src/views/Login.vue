@@ -3,6 +3,14 @@
     <img src="../assets/logo.svg" alt="Darcy"><br/><br/>
     <h1>You are not logged in into solid</h1>
     <button class="btn btn-primary btn-lg" @click="doPopup" v-if="!this.$store.state.loggedIn">Log In</button>
+
+
+    <div class="row" >
+        <div class="col-xs-12 col-md-12" style="text-align:center;">
+            <br/><br/>
+            <a href="https://darcy.is/ibex" target="_blank">What is this?</a>
+        </div>
+    </div>
     
   </div>
 </template>
