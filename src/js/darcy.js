@@ -2,12 +2,12 @@ const $rdf = require('rdflib');
 const FOAF = $rdf.Namespace('http://xmlns.com/foaf/0.1/');
 
 var methods = {
-  
+
 /**
  * gets all the darcy posts in a pod
  * the pod must point to the root of the pod, and include a slash
- * @param {String} pod 
- * 
+ * @param {String} pod
+ *
  * example : getPosts( "https://gaia.solid.community/" ).then( contents =>{ console.log(contents);});
  */
 getPosts: function(pod){
@@ -40,20 +40,20 @@ getPosts: function(pod){
 
 /**
  * gets all the darcy comment URLs of a post
- * @param {String} postURL 
- * 
+ * @param {String} postURL
+ *
  * example : getComments("https://giulio.solid.community/public/darcy/post/2020-01-03TFOOOO.post").then(console.log);
  */
 getComments: function(postURL){
 
   const LDP = $rdf.Namespace("http://www.w3.org/ns/ldp#");
   let store = $rdf.graph();
-  
+
     const fetcher = new $rdf.Fetcher(store);
-  
+
     let folder = $rdf.sym(methods.getDarcyPingbackPath(postURL));
     console.log(folder);
-  
+
     return new Promise(function(resolve,reject){
         fetcher.load(folder).then(() => {
             var folderItems = store.each(
@@ -61,7 +61,7 @@ getComments: function(postURL){
                 LDP("contains"),
                 null
             ).map(t => { return methods.resolvePingbackURL(t["value"])});
-  
+
             resolve(folderItems);
         }).catch(()=>{ resolve([]); });
     });
@@ -70,9 +70,9 @@ getComments: function(postURL){
 /**
  * posts a new comment to a pod
  * the pod must point to the root of the pod, and include a slash
- * @param {String} pod 
- * @param {String} text 
- * 
+ * @param {String} pod
+ * @param {String} text
+ *
  * example : publishPost( "https://gaia.solid.community/","test api!" ).then( response =>{ console.log(response);});
  */
 publishPost: function(pod,text){
@@ -83,7 +83,7 @@ publishPost: function(pod,text){
     function(resolve,reject){
       solid.auth.fetch( url, {method: 'PUT', headers:{'Content-Type': 'text/plain'}, body: text } ).
         then(response => {
-          if (response && response['statusText'] == 'Created'){  
+          if (response && response.status === 201){
               resolve(response);
               return;
           }
@@ -101,8 +101,8 @@ fetchP: function(url, pars){
         url,
         pars
       ).then( response =>{
-        if (!response || (response['statusText'] != 'Created' && response['statusText'] != 'OK')){
-          console.log("result:"+ response['statusText'])
+        if (!response || (response.status !== 201 && response.status !== 200)){
+          console.log("result:", response.status, response.statusText);
           reject(Error({ response: response}));
         } else {
           resolve(response);
@@ -151,14 +151,14 @@ publishComment: function(pod,originalContentURL,text){
         headers:{'Content-Type': 'text/plain',"Slug": pingbackFileName},
         body: commentURL
       });
-    
+
 
   }).then( response =>{
     console.log("file created");
     console.log(response);
   }).catch( (e) =>{
     console.log(e);
-    
+
   });
 },
 
@@ -170,7 +170,7 @@ deleteComment: function(commentURL,postURL,pod){ //comment URL, post URL, pod re
   var actionURL = "";
 
   let pingbackFolder = methods.getDarcyPingbackPath(postURL); //get the post folder
- 
+
   let splittedCommentURL = commentURL.split("/");
   let pingbackFile = "DARCY_"+splittedCommentURL[2]+"_"+splittedCommentURL[6].replace(".comment","")+"_comment.txt"; //transform comment URL in correct pingback filename
 
@@ -191,7 +191,7 @@ deleteComment: function(commentURL,postURL,pod){ //comment URL, post URL, pod re
     .then((res)=>{
 
       if(loggedInPod == commentPod){ //if the one making the request is the owner
-        
+
         methods.fetchP(pingbackFolder+pingbackFile,{ //also delete the pingback
           method:"DELETE",
           headers:{'Content-Type': 'text/plain'},
@@ -215,7 +215,7 @@ deleteComment: function(commentURL,postURL,pod){ //comment URL, post URL, pod re
       resolve(err);
     })
   });
- 
+
 },
 
 deletePost: function(postURL,pod){
@@ -266,9 +266,9 @@ getDarcyCommentURL: function(pod,slug){
 /**
  * used to generate the local url to store the pod owner's own comments.
  * used with getDarcyPingbackURL() to post pingbacks on a different pod
- * 
- * @param {*} pod 
- * @param {*} slug 
+ *
+ * @param {*} pod
+ * @param {*} slug
  */
   return methods.getDarcyContentURL(pod, slug, 'comment');
 },
@@ -281,9 +281,9 @@ getDarcyPostURL: function(pod,slug){
 getDarcyContentURL: function(pod,slug,type){
   /**
  * DO NOT USE FOR PINGBACKS
- * @param {*} pod 
- * @param {*} slug 
- * @param {*} type 
+ * @param {*} pod
+ * @param {*} slug
+ * @param {*} type
  */
   type = methods.stabilizeURLFragment(type);
   slug = methods.stabilizeURLFragment(slug);
@@ -299,11 +299,11 @@ stabilizeURLFragment: function(fragment){
 getDarcyPingbackURL: function(originalContentURL,pod,slug,pingbackType){
 /**
  * generates a pingback url to PUT to the original content pod
- * @param {*} originalContentURL 
- * @param {*} pod 
- * @param {*} slug 
- * @param {*} pingbackType 
- * 
+ * @param {*} originalContentURL
+ * @param {*} pod
+ * @param {*} slug
+ * @param {*} pingbackType
+ *
  * getDarcyPingbackURL("https://giulio.solid.community/public/darcy/post/2020-01-02T14.50.54.892Z.post", "https://gaia.solid.community/",ts(),"comment" )
  */
 
@@ -332,7 +332,7 @@ getDarcyContentURLFromDarcyPingbackURL: function(pingbackURL){
   let elements = pingbackURL.replace(/\.txt$/,'').slice(pingbackURL.lastIndexOf('/')+1).split('_');
   if (elements.length != 4){ return null; }
   if (elements[0] != "DARCY"){ return null; }
-  
+
   return methods.getDarcyContentURL("https://"+elements[1]+"/", elements[2], elements[3]);
 },
 
@@ -340,9 +340,9 @@ listFriends: function(webid){
 /**
  * grabs the webids this person has as so-called friends
  * might be worth to cache the result
- *  
- * @param {String} webid 
- * 
+ *
+ * @param {String} webid
+ *
  * example: listFriends("https://gaia.solid.community/profile/card#me").then(console.log);
  */
   const store = $rdf.graph();
@@ -356,12 +356,12 @@ listFriends: function(webid){
 },
 
 
- 
+
 getName: async function(webid){
 /**
  * resolves a webid's name
- * @param {String} webid 
- * 
+ * @param {String} webid
+ *
  * example: getName("https://jollyorc.solid.community/profile/card#me").then( console.log);
  */
   const store = $rdf.graph();
@@ -369,7 +369,7 @@ getName: async function(webid){
   await fetcher.load(webid);
   const fullName = store.any($rdf.sym(webid), FOAF('name'));
   return ( fullName && fullName.value || webid);
-  
+
 },
 
 
@@ -393,7 +393,7 @@ url_domain: function(url) {
 
 /**
  * returns a nice url-compatible date string
- * @param {Date} date 
+ * @param {Date} date
  */
 ts: function(date){
   date = date || new Date;
@@ -413,7 +413,7 @@ basePath: function(path){
     path.substr(0, lastSeparatorPosition + 1),
   ];
 },
-      
+
 
 };
 
