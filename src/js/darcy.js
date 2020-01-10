@@ -113,8 +113,9 @@ fetchP: function(url, pars){
 },
 
 publishComment: function(pod,originalContentURL,text){
-  let commentURL = methods.getDarcyCommentURL(pod,methods.ts());
-  let pingbackFileName = methods.getDarcyPingbackFileName(pod,methods.ts(),"comment");
+  let slug = methods.ts();
+  let commentURL = methods.getDarcyCommentURL(pod,slug);
+  let pingbackFileName = methods.getDarcyPingbackFileName(pod,slug,"comment");
   let pingbackPath = methods.getDarcyPingbackPath(originalContentURL);
   let [ocFolderName,activityPath] = methods.basePath(pingbackPath);
 
