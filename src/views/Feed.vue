@@ -16,15 +16,16 @@
                 <img style="width:27px;" src="https://upload.wikimedia.org/wikipedia/commons/4/48/Markdown-mark.svg" />  &nbsp;&nbsp;&nbsp; <b>**bold**</b> &nbsp;&nbsp;&nbsp; <i>_italic_</i> &nbsp;&nbsp;&nbsp; <span style="text-decoration: line-through;">~~strikethrough~~</span> &nbsp;&nbsp;&nbsp; <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="_blank">See more</a>
             </div>
 
-
             <br/><br/>
             <button class="btn btn-primary" :disabled="!newPostContent.length" @click="doPublishPost">Publish now</button> 
             <br><br>
             <button class="btn btn-default" @click="getAllPosts">Check new posts</button>
-            
+
+            <h1 v-if="currentFeed!=''">Showing posts by {{currentFeed}}</h1>
             
             <Post v-for="(post, index) in sortedPosts" v-bind:key="post.id" :post="post" :previousDate="(index>0)?sortedPosts[index-1].date:0"></Post>
-            
+
+            <h1 style="font-size:2em;text-align:center;" v-if="!sortedPosts.length">No posts to show</h1>
 
             </div>
         </div>
