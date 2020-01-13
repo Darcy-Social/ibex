@@ -10,7 +10,7 @@ Everything you do will be stored in your own Solid pod. If you edit it on your S
 
 Ibex does not store any data, and everything displayed comes from the Solid pod of the users who created the post or comment in question.
 
-As such, Ibex has only minimal safety features (you can remove undesired comments on your posts) so we do only recommend it for use with no or at least only minimal threat models.
+As such, Ibex has only minimal safety features (you can remove undesired comments on your posts) so we do only recommend it for use with no or at least only minimal threat models. To try things out, visit https://ibex.darcy.is/
 
 Generally, this is a prototype, and there will be errors and issues. Report here or tweet at us if you encounter any: @DarcySocial
 
