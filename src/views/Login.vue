@@ -48,6 +48,15 @@ export default{
       }
     },
     mounted(){
+
+      let session = await solid.auth.currentSession();
+
+      if(session){
+        vm.$store.state.session = session;
+        vm.$store.state.loggedIn = true;
+        vm.$store.state.webID = new URL(vm.$store.state.session.webId).origin;
+      }
+
       if(this.loggedIn)
         this.$router.push("/feed");
     }
