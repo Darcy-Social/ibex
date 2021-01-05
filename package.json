@@ -9,7 +9,7 @@
     "preinstall": "npx npm-force-resolutions"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "commonmark": "^0.29.1",
     "core-js": "^2.6.5",
     "flexboxgrid": "^6.3.1",
