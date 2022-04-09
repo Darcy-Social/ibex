@@ -14,7 +14,7 @@
     "core-js": "^2.6.12",
     "flexboxgrid": "^6.3.1",
     "js-md5": "^0.7.3",
-    "moment": "^2.29.1",
+    "moment": "^2.29.2",
     "notie": "^4.3.1",
     "rdflib": "^1.3.4",
     "solid-auth-client": "^2.5.4",
